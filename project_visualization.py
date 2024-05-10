@@ -17,6 +17,8 @@ df = pd.read_excel("/content/MOH-SQW_Survey.xlsx")
 
 df.head(10)
 
+
+
 print(df.columns)
 
 df.columns = df.columns.str.replace('\t', '')
