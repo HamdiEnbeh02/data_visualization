@@ -12,8 +12,9 @@ import pandas as pd
 #!file -bi /content/MOH-SQW_Survey.xlsx
 
 #!iconv -f latin1 -t utf8 /content/MOH-SQW_Survey.xlsx > /content/MOH-SQW_Survey_utf8.xlsx
-
-df = pd.read_excel("/content/MOH-SQW_Survey.xlsx")
+url = "MOH-SQW_Survey.xlsx"
+df = pd.read_excel(url, engine="openpyxl")
+#df = pd.read_excel("https://github.com/HamdiEnbeh02/data_visualization/blob/3a6b893857cce985b7dd644f8dfb85a41da18665/MOH-SQW_Survey.xlsx")
 
 df.head(10)
 
@@ -28,7 +29,7 @@ print(df.columns)
 col_check = [' What is your gender?', 'What is your age?', 'City']
 df = df.dropna(subset=col_check, how='all')
 
-columns_1= [
+columns_1 = [
     '1. I tend to bounce back quickly after hard times',
     '2. I have a hard time making it through stressful events',
     '3. It does not take me long to recover from a stressful event. ',
@@ -36,7 +37,7 @@ columns_1= [
     '5. I usually come through difficult times with little trouble. ',
     '6. I tend to take a long time to get over set-backs in my life.'
 ]
-columns_2=[
+columns_2 = [
        'The effects of stress are negative and should be avoided.',
        'Experiencing stress facilitates my learning and growth.',
        'Experiencing stress depletes my health and vitality.',
