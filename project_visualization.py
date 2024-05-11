@@ -9,9 +9,9 @@ Original file is located at
 
 import pandas as pd
 
-!file -bi /content/MOH-SQW_Survey.xlsx
+#!file -bi /content/MOH-SQW_Survey.xlsx
 
-!iconv -f latin1 -t utf8 /content/MOH-SQW_Survey.xlsx > /content/MOH-SQW_Survey_utf8.xlsx
+#!iconv -f latin1 -t utf8 /content/MOH-SQW_Survey.xlsx > /content/MOH-SQW_Survey_utf8.xlsx
 
 df = pd.read_excel("/content/MOH-SQW_Survey.xlsx")
 
@@ -53,43 +53,58 @@ df['2. I have a hard time making it through stressful events'] = 6 - df['2. I ha
 df['4. It is hard for me to snap back when something bad happens.'] = 6 - df['4. It is hard for me to snap back when something bad happens.']
 df['6. I tend to take a long time to get over set-backs in my life.'] = 6 - df['6. I tend to take a long time to get over set-backs in my life.']
 
-# Add up the scores of all six items
 df['Resilience Score'] = df[['1. I tend to bounce back quickly after hard times',
-                             '2. I have a hard time making it through stressful events',
-                             '3. It does not take me long to recover from a stressful event.',
-                             '4. It is hard for me to snap back when something bad happens.',
-                             '5. I usually come through difficult times with little trouble.',
-                             '6. I tend to take a long time to get over set-backs in my life.']].sum(axis=1)
+       '2. I have a hard time making it through stressful events',
+       '3. It does not take me long to recover from a stressful event. ',
+       '4. It is hard for me to snap back when something bad happens.',
+       '5. I usually come through difficult times with little trouble. ',
+       '6. I tend to take a long time to get over set-backs in my life.']].sum(axis=1)
 
-# Calculate the total number of questions answered
+
 total_questions_answered = df[['1. I tend to bounce back quickly after hard times',
-                               '2. I have a hard time making it through stressful events',
-                               '3. It does not take me long to recover from a stressful event.',
-                               '4. It is hard for me to snap back when something bad happens.',
-                               '5. I usually come through difficult times with little trouble.',
-                               '6. I tend to take a long time to get over set-backs in my life.']].count(axis=1)
+       '2. I have a hard time making it through stressful events',
+       '3. It does not take me long to recover from a stressful event. ',
+       '4. It is hard for me to snap back when something bad happens.',
+       '5. I usually come through difficult times with little trouble. ',
+       '6. I tend to take a long time to get over set-backs in my life.']].count(axis=1)
 
-# Calculate the average score
+
 df['Resilience Score'] = df['Resilience Score'] / total_questions_answered
 
-# Display the DataFrame with the resilience scores
+
 print(df[['Resilience Score']])
 
-# Reverse score items 1, 3, 5, and 7
-df['1. The effects of stress are negative and should be avoided.'] = 4 - df['1. The effects of stress are negative and should be avoided.']
-df['3. Experiencing stress depletes my health and vitality.'] = 4 - df['3. Experiencing stress depletes my health and vitality.']
-df['5. Experiencing stress inhibits my learning and growth.'] = 4 - df['5. Experiencing stress inhibits my learning and growth.']
-df['7. Experiencing stress debilitates my performance and productivity.'] = 4 - df['7. Experiencing stress debilitates my performance and productivity.']
+mapping = {
+    'Strongly disagree': 0,
+    'Disagree': 1,
+    'Neither Agree nor Disagree': 2,
+    'Agree': 3,
+    'Strongly Agree': 4
+}
 
-# Add up the scores of all eight items
-df['Stress Mindset Score'] = df[['The effects of stress are positive and should be utilized.',
-                                 'Experiencing stress facilitates my learning and growth.',
-                                 'Experiencing stress improves my health and vitality.',
-                                 'Experiencing stress enhances my performance and productivity.',
-                                 'Experiencing stress inhibits my learning and growth.',
-                                 'Experiencing stress improves my health and vitality.',
-                                 'Experiencing stress enhances my performance and productivity.',
-                                 'The effects of stress are positive and should be utilized.']].sum(axis=1)
 
-# Display the DataFrame with the SMM scores
+columns = [
+    'The effects of stress are negative and should be avoided.',
+    'Experiencing stress facilitates my learning and growth.',
+    'Experiencing stress depletes my health and vitality.',
+    'Experiencing stress enhances my performance and productivity.',
+    'Experiencing stress inhibits my learning and growth.',
+    'Experiencing stress improves my health and vitality.',
+    'Experiencing stress debilitates my performance and productivity.',
+    'The effects of stress are positive and should be utilized.'
+]
+
+for col in columns:
+    df[col] = df[col].map(mapping)
+
+
+df['The effects of stress are negative and should be avoided.'] = 4 - df['The effects of stress are negative and should be avoided.']
+df['Experiencing stress depletes my health and vitality.'] = 4 - df['Experiencing stress depletes my health and vitality.']
+df['Experiencing stress inhibits my learning and growth.'] = 4 - df['Experiencing stress inhibits my learning and growth.']
+df['Experiencing stress debilitates my performance and productivity.'] = 4 - df['Experiencing stress debilitates my performance and productivity.']
+
+
+df['Stress Mindset Score'] = df[columns].sum(axis=1)
+
+
 print(df[['Stress Mindset Score']])
